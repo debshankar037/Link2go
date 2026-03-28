@@ -1,4 +1,4 @@
-import { ResponseCode } from "../ResponseCodes.js";
+import { ResponseCode } from "../ResponseCodes";
 
 export class ErrorResponse extends Error {
 

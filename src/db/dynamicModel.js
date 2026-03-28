@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { getBaseConnection } from "./connection.js";
+import { getBaseConnection } from "./connection";
 
 /**
  * Strict:false model on a specific DB. Register models on the `useDb` connection so each

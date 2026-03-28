@@ -1,10 +1,10 @@
 import express from "express";
 import dotenv from "dotenv";
-import { PinoLogger } from "./pinoLogger/pinoLogger.js";
-import { LinkMiddleware } from "./middleware/middleware.js";
-import { LinkController } from "./controller/LinkController.js";
-import { connectDatabase } from "./db/connection.js";
-import { ErrorResponse } from "./response/error/error.js";
+import { PinoLogger } from "./pinoLogger/pinoLogger";
+import { LinkMiddleware } from "./middleware/middleware";
+import { LinkController } from "./controller/LinkController";
+import { connectDatabase } from "./db/connection";
+import { ErrorResponse } from "./response/error/error";
 
 dotenv.config();
 
@@ -34,8 +34,8 @@ app.use((req, res, next) => {
 
 app.post("/shorten-link",
     LinkMiddleware.linkMetaMiddleware,
-    LinkMiddleware.linlStructureMiddleWare,
-    LinkMiddleware.LinkAlreadyShortenedMiddleWare,
+    LinkMiddleware.linkStructureMiddleware,
+    LinkMiddleware.linkAlreadyShortenedMiddleware,
     asyncHandler(LinkMiddleware.validLinkMiddleware),
     asyncHandler(LinkController.LinkShortner)
 );

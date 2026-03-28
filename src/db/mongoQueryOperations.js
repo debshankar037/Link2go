@@ -1,5 +1,5 @@
-import { getURLModel } from "./urlModel.js";
-import { ErrorResponse } from "../response/error/error.js";
+import { getURLModel } from "./urlModel";
+import { ErrorResponse } from "../response/error/error";
 
 export const findURLInDB = async (urlInput) => {
     const href = typeof urlInput === "string" ? urlInput : urlInput?.href;

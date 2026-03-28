@@ -1,10 +1,9 @@
-import { error } from "console";
 import {
     LinkAlreadyExists,
     InvalidLinkStructure,
     LinkNotFound,
     ErrorResponse
-} from "../response/error/error.js";
+} from "../response/error/error";
 import { randomUUID } from "crypto";
 
 export class LinkMiddleware {
@@ -60,17 +59,27 @@ export class LinkMiddleware {
             }
             const domain = process.env.SHORTENER_DOMAIN || "link2go.io";
             const url = target.href;
-            if(url.includes(domain)){
-                req.logger.error(`url ${url} already shortened`);
-                throw new LinkAlreadyExists(`link ${url} already shortened`);
+            if (url.includes(domain)) {
+                req.logger?.error?.(`url ${url} already shortened`);
+                return next(
+                    new LinkAlreadyExists(`link ${url} already shortened`)
+                );
             }
             next();
-        } catch (error) {
-            if(error instanceof ErrorResponse){
-                throw error;
+        } catch (err) {
+            if (err instanceof ErrorResponse) {
+                return next(err);
             }
-            req.logger.error(`error occured while checking link ${req.meta.url} already shortened or not ${error.message}`)
-            next(new ErrorResponse("processing",`error occured while checking link ${req.meta.url} already shortened or not ${error.message}`));
+            req.logger?.error?.(
+                `error checking shortener domain for ${req?.meta?.originalUrl?.href}`,
+                { err: err.message }
+            );
+            next(
+                new ErrorResponse(
+                    "processing",
+                    `error checking link: ${err.message}`
+                )
+            );
         }
     };
 

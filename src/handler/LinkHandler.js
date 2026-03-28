@@ -1,7 +1,7 @@
-import { ValidResponse } from "../response/validResponse/response.js";
-import { ErrorResponse } from "../response/error/error.js";
-import { URLEncoderDecoder } from "../core/encoder/URLEncoderDecoder.js";
-import { findURLInDB } from "../db/mongoQueryOperations.js";
+import { ValidResponse } from "../response/validResponse/response";
+import { ErrorResponse } from "../response/error/error";
+import { URLEncoderDecoder } from "../core/encoder/URLEncoderDecoder";
+import { findURLInDB } from "../db/mongoQueryOperations";
 
 export class LinkProcessor {
     static LinkShortner = async (link, logger) => {
@@ -60,7 +60,7 @@ export const stripTrailingSlash = (url) => {
 export const LinkShortnerHandler = async (req, res) => {
     try {
         const logger = req.logger;
-        const url = req.meta.url;
+        const url = req.meta.originalUrl;
 
         if (!url) {
             logger?.error("Error getting URL from meta", req.meta);

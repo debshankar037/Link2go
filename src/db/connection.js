@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { ErrorResponse } from "../response/error/error.js";
+import { ErrorResponse } from "../response/error/error";
 
 /** @type {import("mongoose").Connection | null} */
 let baseConnection = null;
@@ -32,10 +32,17 @@ const getMongoDBATLASConnectionURI = () =>{
  * @returns {Promise<import("mongoose").Connection>}
  */
 export async function connectDatabase(options = {}) {
-    
-    const connectionURI = getMongoDBATLASConnectionURI();
-    if (!connectionURI?.trim()) {
-        throw new ErrorResponse("db_error","Missing MongoDB connection string");
+    const connectionURI = (
+        options.uri ||
+        process.env.URLDB ||
+        getMongoDBATLASConnectionURI()
+    )?.trim();
+
+    if (!connectionURI) {
+        throw new ErrorResponse(
+            "db_error",
+            "Missing MongoDB connection string: set URLDB or MONGODB_ATLAS_* env vars"
+        );
     }
 
     mongoose.set("strictQuery", false);
@@ -46,7 +53,7 @@ export async function connectDatabase(options = {}) {
     }
 
     try {
-        baseConnection = mongoose.createConnection(uri, {
+        baseConnection = mongoose.createConnection(connectionURI, {
             serverSelectionTimeoutMS: 10_000
         });
         await baseConnection.asPromise();

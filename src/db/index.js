@@ -4,5 +4,5 @@ export {
     getMongooseConnection,
     useDatabase
 } from "./connection.js";
-export { createDynamicModel } from "./dynamicModel.js";
-export { getURLModel } from "./urlModel.js";
+export { createDynamicModel } from "./dynamicModel";
+export { getURLModel } from "./urlModel";

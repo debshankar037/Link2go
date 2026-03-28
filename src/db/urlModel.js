@@ -1,4 +1,4 @@
-import { createDynamicModel } from "./dynamicModel.js";
+import { createDynamicModel } from "./dynamicModel";
 
 /** @type {import("mongoose").Model | null} */
 let urlModel = null;
