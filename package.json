@@ -5,9 +5,9 @@
   "main": "src/index.js",
   "type": "module",
   "scripts": {
-    "build": "mkdir -p dist && cp -r src/* dist/",
-    "start": "node dist/index.js",
+    "build": "babel src --out-dir dist --copy-files",
     "dev": "nodemon --watch src --exec \"npm run build && node dist/index.js\"",
+    "start": "node dist/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "debshankar dey",
@@ -22,5 +22,10 @@
     "nodemon": "^3.1.14",
     "pino": "^10.3.1",
     "uuid": "^13.0.0"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.28.6",
+    "@babel/core": "^7.29.0",
+    "@babel/preset-env": "^7.29.2"
   }
 }
