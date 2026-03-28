@@ -16,7 +16,7 @@ export const logger = new PinoLogger({
     level: "info"
 });
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 5000;
 
 export const asyncHandler = (fn) => {
     return (req, res, next) => {
@@ -32,7 +32,7 @@ app.use((req, res, next) => {
     next();
 });
 
-app.post("/shorten-link",
+app.post("/shorten/link",
     LinkMiddleware.linkMetaMiddleware,
     LinkMiddleware.linkStructureMiddleware,
     LinkMiddleware.linkAlreadyShortenedMiddleware,

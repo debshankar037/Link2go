@@ -11,7 +11,7 @@ export class LinkProcessor {
 
             // Use base URL from env, default localhost for local dev
             const base =
-                process.env.SHORTENER_BASE_URL || "http://localhost:3000";
+                process.env.SHORTENER_BASE_URL || "http://localhost:5000";
 
             // Check if URL is already shortened
             const doc = await findURLInDB(href);
@@ -23,6 +23,7 @@ export class LinkProcessor {
 
             // Generate code from document _id
             const code = URLEncoderDecoder.encode(doc._id);
+            logger?.info?.('Generated code:', code, 'for _id:', doc._id.toString());
             if (!code) {
                 logger?.error?.("Failed to generate short code", { href });
                 throw new ErrorResponse(
@@ -33,10 +34,13 @@ export class LinkProcessor {
 
             // Construct short URL with fake domain in path: /link2go.io/<code>
             const shortURL = `${stripTrailingSlash(base)}/link2go.io/${code}`;
+            logger?.info?.('Constructed shortURL:', shortURL);
             
             // Save short URL in DB
             doc.shortURL = shortURL;
+            logger?.info?.(`Saving doc ${doc} with shortURL: ${shortURL}`);
             await doc.save();
+            logger?.info?.('Saved successfully');
 
             return shortURL;
         } catch (error) {
