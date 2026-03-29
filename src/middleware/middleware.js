@@ -2,9 +2,13 @@ import {
     LinkAlreadyExists,
     InvalidLinkStructure,
     LinkNotFound,
+    InvalidShortLink,
     ErrorResponse
 } from "../response/error/error";
 import { randomUUID } from "crypto";
+import { logger } from "..";
+import { URLEncoderDecoder } from "../core/encoder/URLEncoderDecoder";
+import { checkIfCodeValid } from "../db/mongoQueryOperations";
 
 export class LinkMiddleware {
 
@@ -99,7 +103,6 @@ export class LinkMiddleware {
                 });
                 return next(new LinkNotFound(`Link ${url.href} not found or unreachable`));
             }
-
             next();
         } catch (error) {
             req.logger?.error("link validation failed", {
@@ -109,4 +112,32 @@ export class LinkMiddleware {
             next(new ErrorResponse("processing", `Failed to validate link: ${error.message}`));
         }
     };
+
+    static verifyCodeMiddleware = async (req, res, next) =>{
+        try {
+            const code = req.params?.code;
+            if(!code){
+                logger.error(`Invalid request to redirect given invalid code ${code}`);
+                throw new ErrorResponse("invalid",`Received invalid code ${code} in the param`);
+            }
+            const id = URLEncoderDecoder.decode(code);
+            if(!id){
+                logger.error(`Failed to decode the code ${code}`);
+                throw new ErrorResponse("processing",`Failed to decode the code ${code}`);
+            }
+            const doc = await checkIfCodeValid(id);
+            if(doc && doc.originalUrl){
+                req.meta.url = doc.originalUrl;
+            }else{
+                return next(new InvalidShortLink(`code ${code} present in short link is invalid`));
+            }
+            next();
+        }catch(error){
+            if(error instanceof ErrorResponse){
+                return next(error);
+            }
+            logger.error(`error while verifying code validity - ${error.message}`);
+            next(new ErrorResponse("processing", `Failed to validate link: ${error.message}`));
+        }
+    }
 }

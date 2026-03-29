@@ -5,7 +5,8 @@ export class ErrorResponse extends Error {
         processing: ResponseCode.INTERNAL_SERVER_ERROR,
         invalid: ResponseCode.BAD_REQUEST,
         already_exists: ResponseCode.CONFLICT,
-        db_error: ResponseCode.INTERNAL_SERVER_ERROR
+        db_error: ResponseCode.INTERNAL_SERVER_ERROR,
+        not_found: ResponseCode.NOT_FOUND
     };
 
     constructor(code = "processing", message = "error occured in the server") {
@@ -24,12 +25,18 @@ export class InvalidLinkStructure extends ErrorResponse {
 
 export class LinkNotFound extends ErrorResponse {
     constructor(message = "Link not found") {
-        super("invalid", message);
+        super("not_found", message);
     }
 }
 
 export class LinkAlreadyExists extends ErrorResponse {
     constructor(message = "Link already exists") {
         super("already_exists", message);
+    }
+}
+
+export class InvalidShortLink extends ErrorResponse {
+    constructor(message = "Short Link is invalid") {
+        super("invalid", message);
     }
 }

@@ -1,7 +1,8 @@
-import { LinkShortnerHandler } from "../handler/LinkHandler.js";
+import { LinkShortnerHandler, RedirectToOriginalHandler } from "../handler/LinkHandler.js";
 
 export const LinkController = {
     
-    LinkShortner : LinkShortnerHandler
+    LinkShortner : LinkShortnerHandler,
+    RedirectToOriginal: RedirectToOriginalHandler
 
 }

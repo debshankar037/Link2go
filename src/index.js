@@ -41,8 +41,14 @@ app.post("/shorten/link",
 );
 
 app.get("/",(req,res)=>{
-    res.status(200).json({message:"Hello World"});
+    res.status(200).json({message:"Welcome to Link Shortner"});
 });
+
+app.get("/link2go.io/:code",
+    LinkMiddleware.linkMetaMiddleware,
+    asyncHandler(LinkMiddleware.verifyCodeMiddleware),
+    LinkController.RedirectToOriginal
+)
 
 app.use((err, req, res, next) => {
     if (err instanceof ErrorResponse) {
